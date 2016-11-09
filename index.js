@@ -21,7 +21,6 @@ function convertJSObjectToSQSAttributes (jsObj) {
       }
     }
   }
-  console.log(sqsAttribute)
   return sqsAttribute
 }
 
@@ -31,7 +30,7 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
   let params = {
     MessageBody: Body,
     QueueUrl: QueueUrl,
-    Attributes: convertJSObjectToSQSAttributes(Attributes)
+    MessageAttributes: convertJSObjectToSQSAttributes(Attributes)
   }
 
   return sqs.sendMessage(params).promise()
