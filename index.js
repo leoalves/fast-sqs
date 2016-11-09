@@ -21,6 +21,7 @@ function convertJSObjectToSQSAttributes (jsObj) {
       }
     }
   }
+  console.log(sqsAttribute)
   return sqsAttribute
 }
 
