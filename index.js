@@ -33,5 +33,5 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
     Attributes: convertJSObjectToSQSAttributes(Attributes)
   }
 
-  return sqs.sendMessage(params).Promise()
+  return sqs.sendMessage(params).promise()
 }
