@@ -34,4 +34,7 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
   }
   console.log(params)
   return sqs.sendMessage(params).promise()
+  .catch((err) => {
+    throw new Error(err)
+  })
 }
