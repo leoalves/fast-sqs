@@ -37,3 +37,36 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
     throw new Error(err)
   })
 }
+
+exports.getMessage = function (QueueUrl) {
+  const sqs = new AWS.SQS()
+
+  let params = {
+    AttributeNames: [
+      'All'
+    ],
+    MessageAttributeNames: [
+      'All'
+    ],
+    QueueUrl
+  }
+
+  return sqs.receiveMessage(params).promise()
+  .catch((err) => {
+    throw new Error(err)
+  })
+}
+
+exports.deleteMessage = function (QueueUrl, ReceiptHandle) {
+  const sqs = new AWS.SQS()
+
+  let params = {
+    QueueUrl,
+    ReceiptHandle
+  }
+
+  return sqs.deleteMessage(params).promise()
+  .catch((err) => {
+    throw new Error(err)
+  })
+}
