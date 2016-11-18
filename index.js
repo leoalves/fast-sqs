@@ -24,6 +24,38 @@ function convertJSObjectToSQSAttributes (jsObj) {
   return sqsAttribute
 }
 
+/**
+   * Converts Array of SQS Attributes into a JS Object
+   *
+   * @name convertSQSAttributesToJSObject
+   * @function
+   * @param {object} SQSAttributes javascript object returned from SQS
+   * @throws if SQSAttributes is not an object 
+   * TODO: Convert to more types than just string
+ */
+
+function convertSQSAttributesToJSObject (SQSAttributes) {
+  let jsObj = {}
+  for (var prop in SQSAttributes) {
+    if (SQSAttributes.hasOwnProperty(prop)) {
+      jsObj[prop] = SQSAttributes[prop].StringValue
+    }
+  }
+  return jsObj
+}
+
+/**
+   * Create SQS message
+   *
+   * @name sendMessage
+   * @function
+   * @param {string} QueueUrl Url to the aws queue
+   * @param {string} Body Message to go in the body
+   * @param {object} Attributes Object with message attributes  
+   * @throws error creating message
+   *
+  */
+
 exports.sendMessage = function (QueueUrl, Body, Attributes) {
   const sqs = new AWS.SQS()
 
@@ -38,7 +70,7 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
   })
 }
 
-exports.getMessage = function (QueueUrl) {
+exports.getNext = function (QueueUrl) {
   const sqs = new AWS.SQS()
 
   let params = {
@@ -48,10 +80,22 @@ exports.getMessage = function (QueueUrl) {
     MessageAttributeNames: [
       'All'
     ],
-    QueueUrl
+    QueueUrl,
+    MaxNumberOfMessages: 1
   }
 
   return sqs.receiveMessage(params).promise()
+  .then((message) => {
+    if (message.Messages.length === 0) {
+      return null
+    }
+    return {
+      ReceiptHandle: message.Messages[0].ReceiptHandle,
+      MessageId: message.Messages[0].MessageId,
+      Body: message.Messages[0].Body,
+      ...convertSQSAttributesToJSObject(message.Messages[0].MessageAttributes)
+    }
+  })
   .catch((err) => {
     throw new Error(err)
   })
