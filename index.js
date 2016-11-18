@@ -47,7 +47,7 @@ function convertSQSAttributesToJSObject (SQSAttributes) {
 /**
    * Create SQS message
    *
-   * @name sendMessage
+   * @name send
    * @function
    * @param {string} QueueUrl Url to the aws queue
    * @param {string} Body Message to go in the body
@@ -56,7 +56,7 @@ function convertSQSAttributesToJSObject (SQSAttributes) {
    *
   */
 
-exports.sendMessage = function (QueueUrl, Body, Attributes) {
+exports.send = function (QueueUrl, Body, Attributes) {
   const sqs = new AWS.SQS()
 
   let params = {
@@ -70,7 +70,17 @@ exports.sendMessage = function (QueueUrl, Body, Attributes) {
   })
 }
 
-exports.getNext = function (QueueUrl) {
+/**
+   * Get Next Message SQS Queue
+   *
+   * @name next
+   * @function
+   * @param {string} QueueUrl Url to the aws queue  
+   * @throws error creating message
+   *
+  */
+
+exports.next = function (QueueUrl) {
   const sqs = new AWS.SQS()
 
   let params = {
@@ -101,7 +111,19 @@ exports.getNext = function (QueueUrl) {
   })
 }
 
-exports.deleteMessage = function (QueueUrl, ReceiptHandle) {
+/**
+   * Delete SQS message
+   *
+   * @name delete
+   * @function
+   * @param {string} QueueUrl Url to the aws queue
+   * @param {string} Body Message to go in the body
+   * @param {object} Attributes Object with message attributes  
+   * @throws error creating message
+   *
+  */
+
+exports.delete = function (QueueUrl, ReceiptHandle) {
   const sqs = new AWS.SQS()
 
   let params = {
