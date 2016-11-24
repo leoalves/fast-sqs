@@ -100,12 +100,12 @@ exports.next = function (QueueUrl) {
     if (message.Messages.length === 0) {
       return null
     }
-    return {
-      ReceiptHandle: message.Messages[0].ReceiptHandle,
-      MessageId: message.Messages[0].MessageId,
-      Body: message.Messages[0].Body,
-      ...convertSQSAttributesToJSObject(message.Messages[0].MessageAttributes)
-    }
+    return Object.assign(
+        {ReceiptHandle: message.Messages[0].ReceiptHandle,
+        MessageId: message.Messages[0].MessageId,
+        Body: message.Messages[0].Body},
+        convertSQSAttributesToJSObject(message.Messages[0].MessageAttributes)
+      )
   })
   .catch((err) => {
     throw new Error(err)
